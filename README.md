@@ -28,47 +28,47 @@ th neural_dream.lua -content_image ./examples/inputs/frida_kahlo.jpg -style_laye
 
 It can make weird images. 
 
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/golden_gate.jpg" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/golden_gate_relu_5.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/hoovertowernight.jpg" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/stanford.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/escher_sphere.jpg" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/escher_relu_5.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/golden_gate.jpg" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/golden_gate_relu_5.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/hoovertowernight.jpg" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/stanford.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/escher_sphere.jpg" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/escher_relu_5.png" height="320px">
 
 
 Depending on the dose, it can make brad look very different.
 
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/brad_pitt.jpg" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/acid_brad_10_ug.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/acid_brad_100_ug.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/acid_brad_1000_ug.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/brad_pitt.jpg" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/acid_brad_10_ug.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/acid_brad_100_ug.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/acid_brad_1000_ug.png" height="320px">
 
 
 Which layer you choose can make a big difference. The above were taken from relu5_1. If we change to conv5_4, it gives brad a third eye.
 
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/third_eye_bradd.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/third_eye_bradd.png" height="320px">
 
 There's significant difference between nearby conv layers. These are taken from conv5_1 and conv5_4, respectively.
 
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/matisse_conv5_1.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/matisse_conv5_4.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/matisse_conv5_1.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/matisse_conv5_4.png" height="320px">
 
 Looking across the network gives a good feel for what the network is doing. These are taken from relu1_1, relu2_1, ..., relu5_1.
 
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_1.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_2.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_3.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_4.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_5.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_1.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_2.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_3.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_4.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_5.png" height="320px">
 
 
 You can even do a negative dose, which results in subtracting the abstraction layer from the image.
 
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_1.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_2.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_3.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_4.png" height="160px">
-<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_5.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_1.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_2.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_3.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_4.png" height="320px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_5.png" height="320px">
 
 
 **Options**:
