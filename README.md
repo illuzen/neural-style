@@ -153,9 +153,3 @@ In CPU mode on an Intel Core i7-4790k, running the same takes around 40 minutes.
 Most of the examples shown here were run for 2000 iterations, but with a bit of parameter tuning most images will
 give good results within 1000 iterations.
 
-## Implementation details
-Images are initialized with white noise and optimized using L-BFGS.
-
-We perform style reconstructions using the `conv1_1`, `conv2_1`, `conv3_1`, `conv4_1`, and `conv5_1` layers
-and content reconstructions using the `conv4_2` layer. As in the paper, the five style reconstruction losses have
-equal weights.
