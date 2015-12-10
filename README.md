@@ -1,147 +1,83 @@
-# neural-style
+# torch-inception
 
-This is a torch implementation of the paper [A Neural Algorithm of Artistic Style](http://arxiv.org/abs/1508.06576)
-by Leon A. Gatys, Alexander S. Ecker, and Matthias Bethge.
+This is a fork of [jcjohnson's neural art style](https://github.com/jcjohnson/neural-style) project, modified to generate images using the techniques described in the Google Research blog [Inceptionism](http://googleresearch.blogspot.com/2015/06/inceptionism-going-deeper-into-neural.html). Hence the name "torch-inception"! I considered calling it nightmare-sauce, but decided that's for another project.
 
-The paper presents an algorithm for combining the content of one image with the style of another image using
-convolutional neural networks. Here's an example that maps the artistic style of
-[The Starry Night](https://en.wikipedia.org/wiki/The_Starry_Night)
-onto a night-time photograph of the Stanford campus:
+Most of what I did was delete code that wasn't relevant in this use case. The main addition is to multiply the syle layer's activations by the "acid_dose" constant (which can be negative!!) in order to train the image to accentuate that layer's features. Also I changed the default tag of gpu to be -1 so newbs that don't read README's won't think it requires a gpu ;)
 
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/starry_night.jpg" height="200px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/hoovertowernight.jpg" height="200px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/starry_stanford_big_2.png" width="706px">
+I omit lbfgs as an optimization option because for some reason it always stops early with this technique.
 
-Applying the style of different images to the same content image gives interesting results.
-Here we reproduce Figure 2 from the paper, which renders a photograph of the Tubingen in Germany in a
-variety of styles:
+Steps:
 
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/tubingen.jpg" height="250px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/tubingen_shipwreck.png" height="250px">
+0) Install dependencies:
 
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/tubingen_starry.png" height="250px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/tubingen_scream.png" height="250px">
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/tubingen_seated_nude.png" height="250px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/tubingen_composition_vii.png" height="250px">
-
-Here are the results of applying the style of various pieces of artwork to this photograph of the
-golden gate bridge:
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/golden_gate.jpg" height="200px">
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/frida_kahlo.jpg" height="160px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_kahlo.png" height="160px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/escher_sphere.jpg" height="160px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_escher.png" height="160px">
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/woman-with-hat-matisse.jpg" height="160px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_matisse.png" height="160px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/the_scream.jpg" height="160px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_scream.png" height="160px">
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/starry_night_crop.png" height="160px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_starry.png" height="160px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/seated-nude.jpg" height="160px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_seated.png" height="160px">
-
-### Content / Style Tradeoff
-
-The algorithm allows the user to trade-off the relative weight of the style and content reconstruction terms,
-as shown in this example where we port the style of [Picasso's 1907 self-portrait](http://www.wikiart.org/en/pablo-picasso/self-portrait-1907) onto Brad Pitt:
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/picasso_selfport1907.jpg" height="220px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/inputs/brad_pitt.jpg" height="220px">
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/pitt_picasso_content_5_style_10.png" height="220px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/pitt_picasso_content_1_style_10.png" height="220px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/pitt_picasso_content_01_style_10.png" height="220px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/pitt_picasso_content_0025_style_10.png" height="220px">
-
-### Style Scale
-
-By resizing the style image before extracting style features, we can control the types of artistic
-features that are transfered from the style image; you can control this behavior with the `-style_scale` flag.
-Below we see three examples of rendering the Golden Gate Bridge in the style of The Starry Night.
-From left to right, `-style_scale` is 2.0, 1.0, and 0.5.
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_starry_scale2.png" height=175px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_starry_scale1.png" height=175px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_starry_scale05.png" height=175px">
-
-### Multiple Style Images
-You can use more than one style image to blend multiple artistic styles.
-
-Clockwise from upper left: "The Starry Night" + "The Scream", "The Scream" + "Composition VII",
-"Seated Nude" + "Composition VII", and "Seated Nude" + "The Starry Night"
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/tubingen_starry_scream.png" height="250px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/tubingen_scream_composition_vii.png" height="250px">
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/tubingen_starry_seated.png" height="250px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/tubingen_seated_nude_composition_vii.png" height="250px">
-
-
-
-### Style Interpolation
-When using multiple style images, you can control the degree to which they are blended:
-
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_starry_scream_3_7.png" height="175px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_starry_scream_5_5.png" height="175px">
-<img src="https://raw.githubusercontent.com/jcjohnson/neural-style/master/examples/outputs/golden_gate_starry_scream_7_3.png" height="175px">
-
-
-## Setup:
-
-Dependencies:
 * [torch7](https://github.com/torch/torch7)
 * [loadcaffe](https://github.com/szagoruyko/loadcaffe)
 
-Optional dependencies:
+Optional:
 * CUDA 6.5+
 * [cudnn.torch](https://github.com/soumith/cudnn.torch)
 
-After installing dependencies, you'll need to run the following script to download the VGG model:
-```
-sh models/download_models.sh
-```
-This will download the original [VGG-19 model](https://gist.github.com/ksimonyan/3785162f95cd2d5fee77#file-readme-md).
-Leon Gatys has graciously provided the modified version of the VGG-19 model that was used in their paper;
-this will also be downloaded. By default the original VGG-19 model is used.
 
-You can find detailed installation instructions for Ubuntu in the [installation guide](INSTALL.md).
-
-## Usage
-Basic usage:
+1) Pick a model to use (some are provided in the models folder)
+2) Pick an input image
+3) Pick a level of abstaction ("macro" relu5_1, relu4_1, ..., relu1_1 "micro") (conv5_4 etc is also available)
+4) Run a command that looks like this
 ```
-th neural_style.lua -style_image <image.jpg> -content_image <image.jpg>
+th neural_dream.lua -content_image ./examples/inputs/frida_kahlo.jpg -style_layers relu5_1 -save_iter 1 -num_iterations 30 -gpu -1 -acid_dose 1000
 ```
 
-To use multiple style images, pass a comma-separated list like this:
+It can make weird images. 
 
-`-style_image starry_night.jpg,the_scream.jpg`.
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/golden_gate.jpg" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/golden_gate_relu_5.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/hoovertowernight.jpg" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/stanford.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/escher_sphere.jpg" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/escher_relu_5.png" height="160px">
+
+
+Depending on the dose, it can make brad look very different.
+
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/brad_pitt.jpg" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/acid_brad_10_ug.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/acid_brad_100_ug.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/acid_brad_1000_ug.png" height="160px">
+
+
+Which layer you choose can make a big difference. The above were taken from relu5_1. If we change to conv5_4, it gives brad a third eye.
+
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/third_eye_bradd.png" height="160px">
+
+There's significant difference between nearby conv layers. These are taken from conv5_1 and conv5_4, respectively.
+
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/matisse_conv5_1.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/matisse_conv5_4.png" height="160px">
+
+Looking across the network gives a good feel for what the network is doing. These are taken from relu1_1, relu2_1, ..., relu5_1.
+
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_1.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_2.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_3.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_4.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_5.png" height="160px">
+
+
+You can even do a negative dose, which results in subtracting the abstraction layer from the image.
+
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_1.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_2.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_3.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_4.png" height="160px">
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_negative_relu_5.png" height="160px">
+
 
 **Options**:
 * `-image_size`: Maximum side length (in pixels) of of the generated image. Default is 512.
-* `-style_blend_weights`: The weight for blending the style of multiple style images, as a
-  comma-separated list, such as `-style_blend_weights 3,7`. By default all style images
-  are equally weighted.
 * `-gpu`: Zero-indexed ID of the GPU to use; for CPU mode set `-gpu` to -1.
 
 **Optimization options**:
 * `-content_weight`: How much to weight the content reconstruction term. Default is 5e0.
-* `-style_weight`: How much to weight the style reconstruction term. Default is 1e2.
-* `-tv_weight`: Weight of total-variation (TV) regularization; this helps to smooth the image.
-  Default is 1e-3. Set to 0 to disable TV regularization.
 * `-num_iterations`: Default is 1000.
-* `-init`: Method for generating the generated image; one of `random` or `image`.
-  Default is `random` which uses a noise initialization as in the paper; `image`
-  initializes with the content image.
-* `-optimizer`: The optimization algorithm to use; either `lbfgs` or `adam`; default is `lbfgs`.
-  L-BFGS tends to give better results, but uses more memory. Switching to ADAM will reduce memory usage;
-  when using ADAM you will probably need to play with other parameters to get good results, especially
-  the style weight, content weight, and learning rate; you may also want to normalize gradients when
-  using ADAM.
 * `-learning_rate`: Learning rate to use with the ADAM optimizer. Default is 1e1.
 * `-normalize_gradients`: If this flag is present, style and content gradients from each layer will be
   L1 normalized. Idea from [andersbll/neural_artistic_style](https://github.com/andersbll/neural_artistic_style).
@@ -152,8 +88,6 @@ To use multiple style images, pass a comma-separated list like this:
 * `-save_iter`: Save the image every `save_iter` iterations. Set to 0 to disable saving intermediate results.
 
 **Layer options**:
-* `-content_layers`: Comma-separated list of layer names to use for content reconstruction.
-  Default is `relu4_2`.
 * `-style_layers`: Comman-separated list of layer names to use for style reconstruction.
   Default is `relu1_1,relu2_1,relu3_1,relu4_1,relu5_1`.
 
