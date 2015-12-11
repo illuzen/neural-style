@@ -55,6 +55,7 @@ There's significant difference between nearby conv layers. These are taken from 
 
 Looking across the network gives a good feel for what the network is doing. These are taken from relu1_1, relu2_1, ..., relu5_1.
 
+<img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/inputs/tubingen.jpg" height="320px">
 <img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_1.png" height="320px">
 <img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_2.png" height="320px">
 <img src="https://raw.githubusercontent.com/snakecharmer1024/neural-style/master/examples/outputs/tubingen_relu_3.png" height="320px">
